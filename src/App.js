@@ -1,6 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import ChatArea from "./ChatArea";
+import Message from "./Message";
+import Conversation from "./Conversation";
+
+const conversations = [
+  {
+    _id: 0,
+    participants: ["Jim", "Bill"],
+    messages: [
+      { content: "This is a message", date: "Apr 2 1:54", owner: "Jim" },
+      { content: "What do you wanna do?", date: "Apr 2 1:54", owner: "Bill" },
+      {
+        content: "I dont fucking know, man...",
+        date: "Apr 2 1:54",
+        owner: "Jim"
+      }
+    ]
+  },
+  {
+    _id: 1,
+    participants: ["Jim", "Jerry"],
+    messages: [
+      { content: "This is a message TWO", date: "Apr 2 1:54", owner: "Jerry" },
+      {
+        content: "What do you wanna do TWO?",
+        date: "Apr 2 1:54",
+        owner: "Jim"
+      },
+      {
+        content: "I dont fucking know, man... TWO",
+        date: "Apr 2 1:54",
+        owner: "Jerry"
+      }
+    ]
+  }
+];
 
 function App() {
+  const [currentChat, setCurrentChat] = useState(conversations[0]);
+  const [currentUser, setCurrentUser] = useState("Jim");
+
+  function selectChat(chatId) {
+    setCurrentChat(conversations.find(chat => chat._id === chatId));
+  }
+
+  function getChatName(chat) {
+    return chat.participants;
+  }
+
   return (
     <div id="chat-container">
       <div id="search-container">
@@ -8,12 +55,17 @@ function App() {
       </div>
 
       <div id="conversation-list">
-        <div className="conversation">
-          <img src="https://picsum.photos/20" alt="add attachment" />
-          <div className="title-text">John Doe</div>
-          <div className="created-date">Apr 16</div>
-          <div className="conversation-message">This is a message.</div>
-        </div>
+        {conversations.map(chat => (
+          <Conversation
+            key={chat._id}
+            isActive={chat._id === currentChat._id}
+            name={getChatName(chat)}
+            lastMessage={chat.messages[chat.messages.length - 1].content}
+            lastMessageDate={chat.messages[chat.messages.length - 1].date}
+            pic="https://picsum.photos/24"
+            handleClick={() => selectChat(chat._id)}
+          />
+        ))}
       </div>
 
       <div id="new-message-container">
@@ -21,30 +73,24 @@ function App() {
       </div>
 
       <div id="chat-title">
-        <span>The chat name</span>
+        <span>{getChatName(currentChat)}</span>
         <img src="https://picsum.photos/20" alt="delete conversation"></img>
       </div>
 
       <div id="chat-message-list">
-        <div className="message-row you-message">
-          <div className="message-content">
-            <div className="message-text">Ok then</div>
-            <div className="message-time">Apr 16</div>
-          </div>
-        </div>
-        <div className="message-row other-message">
-          <div className="message-content">
-            <img src="https://picsum.photos/200" alt="add attachment" />
-            <div className="message-text">Ok then</div>
-            <div className="message-time">Apr 16</div>
-          </div>
-        </div>
+        {currentChat.messages.map(message => (
+          <Message
+            messageType={
+              message.owner === currentUser ? "you-message" : "other-message"
+            }
+            message={message.content}
+            messageTime={message.time}
+            pic="https://picsum.photos/24"
+          />
+        ))}
       </div>
 
-      <div id="chat-form">
-        <img src="https://picsum.photos/20" alt="add attachment" />
-        <input type="text" placeholder="type a message" />
-      </div>
+      <ChatArea />
     </div>
   );
 }
