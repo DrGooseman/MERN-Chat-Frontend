@@ -8,7 +8,7 @@ function Message(props) {
           <img src={props.pic} alt="add attachment" />
         )}
         <div className="message-text">{props.message}</div>
-        <div className="message-time">{props.messageTime}</div>
+        <div className="message-time">{props.messageDate}</div>
       </div>
     </div>
   );

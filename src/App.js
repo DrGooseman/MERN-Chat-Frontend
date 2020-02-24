@@ -37,7 +37,8 @@ const conversations = [
 ];
 
 function App() {
-  const [currentChat, setCurrentChat] = useState(conversations[0]);
+  // const [conversations, setConversations] = useState(conversations);
+  const [currentChat, setCurrentChat] = useState(null);
   const [currentUser, setCurrentUser] = useState("Jim");
 
   function selectChat(chatId) {
@@ -45,7 +46,38 @@ function App() {
   }
 
   function getChatName(chat) {
-    return chat.participants;
+    let chatName = "";
+    chat.participants.forEach(user => {
+      if (user !== currentUser) {
+        if (chatName.length > 0) chatName += ", ";
+        chatName += user;
+      }
+    });
+    return chatName;
+  }
+
+  function sendMessage(messageContent) {
+    const currentdate = new Date();
+    var datetime =
+      currentdate.toLocaleString("default", { month: "short" }) +
+      " " +
+      currentdate.getDate() +
+      " " +
+      currentdate.getHours() +
+      ":" +
+      currentdate.getMinutes();
+
+    const newMessage = {
+      content: messageContent,
+      owner: currentUser,
+      date: datetime
+    };
+
+    // const newConversations = [...conversations];
+    // newConversations
+    const updatedChat = { ...currentChat };
+    updatedChat.messages.push(newMessage);
+    setCurrentChat(updatedChat);
   }
 
   return (
@@ -58,7 +90,7 @@ function App() {
         {conversations.map(chat => (
           <Conversation
             key={chat._id}
-            isActive={chat._id === currentChat._id}
+            isActive={currentChat && chat._id === currentChat._id}
             name={getChatName(chat)}
             lastMessage={chat.messages[chat.messages.length - 1].content}
             lastMessageDate={chat.messages[chat.messages.length - 1].date}
@@ -73,24 +105,31 @@ function App() {
       </div>
 
       <div id="chat-title">
-        <span>{getChatName(currentChat)}</span>
+        <span>{currentChat && getChatName(currentChat)}</span>
         <img src="https://picsum.photos/20" alt="delete conversation"></img>
       </div>
 
       <div id="chat-message-list">
-        {currentChat.messages.map(message => (
-          <Message
-            messageType={
-              message.owner === currentUser ? "you-message" : "other-message"
-            }
-            message={message.content}
-            messageTime={message.time}
-            pic="https://picsum.photos/24"
-          />
-        ))}
+        {currentChat &&
+          currentChat.messages
+            .slice(0)
+            .reverse()
+            .map((message, index) => (
+              <Message
+                key={index}
+                messageType={
+                  message.owner === currentUser
+                    ? "you-message"
+                    : "other-message"
+                }
+                message={message.content}
+                messageDate={message.date}
+                pic="https://picsum.photos/24"
+              />
+            ))}
       </div>
 
-      <ChatArea />
+      {currentChat && <ChatArea handleSend={sendMessage} />}
     </div>
   );
 }
