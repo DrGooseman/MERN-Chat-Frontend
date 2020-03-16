@@ -175,7 +175,7 @@ body {
 
 #chat-title {
   display: grid;
-  grid: 36px /1fr 36px;
+  grid: 100% /1fr 36px 71px;
   align-content: center;
   align-items: center;
   padding: 0 20px;
@@ -189,6 +189,16 @@ body {
 
 #chat-title > img {
   cursor: pointer;
+}
+.profile-pic {
+  background-color: rgb(216, 216, 216);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile-pic img {
+  width: 75%;
 }
 
 #chat-message-list {
@@ -255,6 +265,28 @@ body {
   color: #111;
   border: 1px solid #ddd;
   border-radius: 14px 14px 14px 0;
+}
+
+.popover-positioned-left {
+  width: 26rem;
+  height: 26rem;
+  border-radius: 1rem;
+  background-color: white;
+  text-align: center;
+  box-shadow: -1px 2px 16px 0px rgba(0, 0, 0, 0.75);
+}
+.popover-positioned-left img {
+  width: 12em;
+  height: 12em;
+  margin: 2em auto 0 auto;
+}
+
+.center-container {
+  width: 90%;
+  height: 90%;
+  max-width: 44rem;
+  max-height: 44rem;
+  background-color: white;
 }
 
 ::-webkit-scrollbar {
