@@ -8,20 +8,12 @@ import Alert from "react-bootstrap/Alert";
 import { useHttpClient } from "../hooks/http-hook";
 import { AuthContext } from "../auth-context";
 
-// const users = [
-//   { username: "jim", picture: "https://picsum.photos/24" },
-//   { username: "jim2", picture: "https://picsum.photos/24" },
-//   { username: "jim2", picture: "https://picsum.photos/24" },
-//   { username: "jim2", picture: "https://picsum.photos/24" },
-//   { username: "jim2", picture: "https://picsum.photos/24" }
-// ];
-
 function NewChatModal(props) {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [selectedUser, setSelectedUser] = useState();
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   const [message, setMessage] = useState();
   const [users, setUsers] = useState([]);
   const [isValid, setIsValid] = useState(false);
@@ -140,21 +132,28 @@ function NewChatModal(props) {
           )}
           {users && (
             <ul>
-              {users.map(
-                user =>
-                  user.username !== auth.username && (
-                    <li
-                      key={user.username}
-                      onClick={() => selectUser(user.username)}
-                    >
-                      <img
-                        src={process.env.REACT_APP_ASSET_URL + user.picture}
-                        alt={"pic"}
-                      />
-                      {user.username}
-                    </li>
-                  )
-              )}
+              {users
+                .filter(user => user.username.includes(search))
+                .map(
+                  user =>
+                    user.username !== auth.username && (
+                      <li
+                        key={user.username}
+                        onClick={() => selectUser(user.username)}
+                        className={
+                          user.username === search
+                            ? "new-chat-modal-item-found"
+                            : ""
+                        }
+                      >
+                        <img
+                          src={process.env.REACT_APP_ASSET_URL + user.picture}
+                          alt={"pic"}
+                        />
+                        {user.username}
+                      </li>
+                    )
+                )}
             </ul>
           )}
         </div>

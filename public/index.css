@@ -338,6 +338,10 @@ body {
   background-color: #eee;
 }
 
+.new-chat-modal-item-found {
+  background-color: rgb(204, 204, 204) !important;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }

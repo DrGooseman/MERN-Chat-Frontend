@@ -111,7 +111,9 @@ function Chat() {
             ))}
       </div>
 
-      {currentChat && <ChatArea handleSend={sendMessage} />}
+      {currentChat && (
+        <ChatArea currentChat={currentChat} handleSend={sendMessage} />
+      )}
     </div>
   );
 }
