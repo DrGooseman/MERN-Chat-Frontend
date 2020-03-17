@@ -1,74 +1,27 @@
 import React, { useState, useContext } from "react";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
-import Button from "react-bootstrap/Button";
 
 import ChatArea from "../components/ChatArea";
 import Message from "../components/Message";
-import Conversation from "../components/Conversation";
+import ChatList from "../components/ChatList";
+import NewChatModal from "../components/NewChatModal";
+import ChatTitle from "../components/ChatTitle";
 
 import { AuthContext } from "../auth-context";
 
-const conversationsArray = [
-  {
-    _id: 0,
-    participants: ["Jim", "Bill"],
-    messages: [
-      { content: "This is a message", date: "Apr 2 1:54", owner: "Jim" },
-      { content: "What do you wanna do?", date: "Apr 2 1:54", owner: "Bill" },
-      {
-        content: "I dont fucking know, man...",
-        date: "Apr 2 1:54",
-        owner: "Jim"
-      }
-    ]
-  },
-  {
-    _id: 1,
-    participants: ["Jim", "Jerry"],
-    messages: [
-      { content: "This is a message TWO", date: "Apr 2 1:54", owner: "Jerry" },
-      {
-        content: "What do you wanna do TWO?",
-        date: "Apr 2 1:54",
-        owner: "Jim"
-      },
-      {
-        content: "I dont fucking know, man... TWO",
-        date: "Apr 2 1:54",
-        owner: "Jerry"
-      }
-    ]
-  }
-];
+import { getChatName, getPictureOfUser, getDate } from "./../util/utils";
 
 function Chat() {
-  const [conversations, setConversations] = useState(conversationsArray);
   const [currentChat, setCurrentChat] = useState(null);
-  const [currentUser, setCurrentUser] = useState("Jim");
+  const [showingNewChatModal, setShowingNewChatModal] = useState(false);
+  //const [currentUser, setCurrentUser] = useState("Jim");
 
   const auth = useContext(AuthContext);
 
-  function selectChat(chatId) {
-    setCurrentChat(conversations.find(chat => chat._id === chatId));
-  }
-
-  function deleteChat() {
-    setConversations(
-      conversations.filter(conversation => conversation._id !== currentChat._id)
-    );
+  function handleDeleteChat() {
+    // setConversations(
+    //   conversations.filter(conversation => conversation._id !== currentChat._id)
+    // );
     setCurrentChat(null);
-  }
-
-  function getChatName(chat) {
-    let chatName = "";
-    chat.participants.forEach(user => {
-      if (user !== currentUser) {
-        if (chatName.length > 0) chatName += ", ";
-        chatName += user;
-      }
-    });
-    return chatName;
   }
 
   function sendMessage(messageContent) {
@@ -84,7 +37,7 @@ function Chat() {
 
     const newMessage = {
       content: messageContent,
-      owner: currentUser,
+      owner: auth.username,
       date: datetime
     };
 
@@ -95,13 +48,18 @@ function Chat() {
     setCurrentChat(updatedChat);
   }
 
+  function handleCreateChat(chat) {
+    setCurrentChat(chat);
+  }
+
   return (
     <div id="chat-container">
       <div id="search-container">
         <input type="text" placeholder="Search" />
       </div>
 
-      <div id="conversation-list">
+      <ChatList setCurrentChat={setCurrentChat} currentChat={currentChat} />
+      {/* <div id="conversation-list">
         {conversations.map(chat => (
           <Conversation
             key={chat._id}
@@ -113,37 +71,22 @@ function Chat() {
             handleClick={() => selectChat(chat._id)}
           />
         ))}
-      </div>
+      </div> */}
+
+      <NewChatModal
+        handleCreateChat={handleCreateChat}
+        show={showingNewChatModal}
+        onHide={() => setShowingNewChatModal(false)}
+      />
 
       <div id="new-message-container">
-        <a href="#">+</a>
+        <button onClick={() => setShowingNewChatModal(true)}>+</button>
       </div>
 
-      <div id="chat-title">
-        <span>{currentChat && getChatName(currentChat)}</span>
-        <img
-          onClick={deleteChat}
-          src="https://picsum.photos/20"
-          alt="delete conversation"
-        ></img>
-        <OverlayTrigger
-          trigger="click"
-          key="profile"
-          placement="left"
-          overlay={
-            <div className="popover-positioned-left">
-              <img src="https://picsum.photos/20" alt="profile-pic"></img>
-              <h2>Name</h2>
-              <h3>Email</h3>
-              <Button onClick={auth.logout}>Logout</Button>
-            </div>
-          }
-        >
-          <div className="profile-pic">
-            <img src="https://picsum.photos/20" alt="profile-pic"></img>
-          </div>
-        </OverlayTrigger>
-      </div>
+      <ChatTitle
+        currentChat={currentChat}
+        handleDeleteChat={handleDeleteChat}
+      />
 
       <div id="chat-message-list">
         {currentChat &&
@@ -154,13 +97,16 @@ function Chat() {
               <Message
                 key={index}
                 messageType={
-                  message.owner === currentUser
+                  message.user === auth.username
                     ? "you-message"
                     : "other-message"
                 }
-                message={message.content}
-                messageDate={message.date}
-                pic="https://picsum.photos/24"
+                message={message.message}
+                messageDate={getDate(message.date)}
+                pic={
+                  process.env.REACT_APP_ASSET_URL +
+                  getPictureOfUser(currentChat, message.user)
+                }
               />
             ))}
       </div>

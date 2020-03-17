@@ -6,29 +6,33 @@ export function useAuth() {
   const [token, setToken] = useState();
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [_id, setUserId] = useState();
-  const [name, setName] = useState();
-  const [lang, setLang] = useState();
+  const [username, setUsername] = useState();
+  const [picture, setPicture] = useState();
 
-  const login = useCallback((uid, token, name, oldExpirationDate, lang) => {
-    setToken(token);
-    setName(name);
-    setLang(lang);
-    setUserId(uid);
-    const tokenExpirationDate =
-      oldExpirationDate || new Date(new Date().getTime() + 1000 * 60 * 60 * 12);
-    setTokenExpirationDate(tokenExpirationDate);
+  const login = useCallback(
+    (uid, token, username, oldExpirationDate, picture) => {
+      setToken(token);
+      setUsername(username);
+      setPicture(picture);
+      setUserId(uid);
+      const tokenExpirationDate =
+        oldExpirationDate ||
+        new Date(new Date().getTime() + 1000 * 60 * 60 * 12);
+      setTokenExpirationDate(tokenExpirationDate);
 
-    localStorage.setItem(
-      "userData",
-      JSON.stringify({
-        _id: uid,
-        name: name,
-        token: token,
-        lang: lang,
-        expiration: tokenExpirationDate.toISOString()
-      })
-    );
-  }, []);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          _id: uid,
+          username: username,
+          token: token,
+          picture: picture,
+          expiration: tokenExpirationDate.toISOString()
+        })
+      );
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setToken(null);
@@ -56,11 +60,11 @@ export function useAuth() {
       login(
         storedData._id,
         storedData.token,
-        storedData.name,
+        storedData.username,
         new Date(storedData.expiration),
-        storedData.lang
+        storedData.picture
       );
   }, [login]);
 
-  return { token, login, logout, _id, name, lang };
+  return { token, login, logout, _id, username, picture };
 }

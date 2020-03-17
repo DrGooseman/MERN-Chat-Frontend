@@ -13,7 +13,7 @@ import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 
 function App() {
-  const { token, login, logout, _id, name, lang } = useAuth();
+  const { token, login, logout, _id, username, picture } = useAuth();
 
   let routes;
 
@@ -39,7 +39,15 @@ function App() {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: !!token, token, _id, login, logout, name, lang }}
+      value={{
+        isLoggedIn: !!token,
+        token,
+        _id,
+        login,
+        logout,
+        username,
+        picture
+      }}
     >
       <Router>
         <main>{routes}</main>

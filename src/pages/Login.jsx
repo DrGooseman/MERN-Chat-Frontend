@@ -69,7 +69,7 @@ function Login() {
           }),
           { "Content-Type": "application/json" }
         );
-
+        console.log(responseData.picture);
         auth.login(
           responseData._id,
           responseData.token,
