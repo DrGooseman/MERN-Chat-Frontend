@@ -169,6 +169,9 @@ body {
   padding-left: 22px;
   padding-right: 10px;
 }
+#chat-form button {
+  height: 5rem;
+}
 
 #chat-form input {
   outline: none;

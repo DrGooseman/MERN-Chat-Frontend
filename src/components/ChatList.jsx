@@ -3,6 +3,8 @@ import Conversation from "./Conversation";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
+import { connectToSocket, emit } from "../api";
+
 import { useHttpClient } from "../hooks/http-hook";
 import { AuthContext } from "../auth-context";
 import { getChatName, getPicture, getDate } from "./../util/utils";
@@ -11,10 +13,28 @@ function ChatList(props) {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [chats, setChats] = useState([]);
+  const [lastUpdatedChat, setLastUpdatedChat] = useState();
 
   useEffect(() => {
     getChats();
+    // connectToSocket(auth.username);
+    connectToSocket(auth.username, receiveIncomingUpdate);
   }, []);
+
+  function receiveIncomingUpdate(err, updatedChat) {
+    setLastUpdatedChat(updatedChat);
+    setChats(prevChats => {
+      return [
+        ...prevChats.filter(chat => chat._id !== updatedChat._id),
+        updatedChat
+      ];
+    });
+  }
+
+  useEffect(() => {
+    if (lastUpdatedChat && lastUpdatedChat._id === props.currentChat._id)
+      props.setCurrentChat(lastUpdatedChat);
+  }, [chats]);
 
   async function getChats() {
     try {
@@ -66,6 +86,7 @@ function ChatList(props) {
           handleClick={() => selectChat(chat._id)}
         />
       ))}
+      <button onClick={() => console.log(props.currentChat)}>click</button>
     </div>
   );
 }
