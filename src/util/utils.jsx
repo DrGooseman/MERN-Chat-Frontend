@@ -11,11 +11,15 @@ export function getChatName(chat, localUser) {
 
 export function getPicture(chat, localUser) {
   const user = chat.users.find(user => user.username !== localUser.username);
+
+  if (!user) return "404";
   return user.picture;
 }
 
 export function getPictureOfUser(chat, username) {
+  if (!username) return null;
   const user = chat.users.find(user => user.username === username);
+  if (!user) return "404";
   return user.picture;
 }
 

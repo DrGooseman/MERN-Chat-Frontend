@@ -9,13 +9,12 @@ import { useHttpClient } from "../hooks/http-hook";
 import { AuthContext } from "../auth-context";
 import AddUserBubble from "./AddUserBubble";
 
-function NewChatModal(props) {
+function AddUserModal(props) {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
-  const [message, setMessage] = useState();
   const [users, setUsers] = useState([]);
   const [isValid, setIsValid] = useState(false);
 
@@ -40,9 +39,9 @@ function NewChatModal(props) {
   // }, [search]);
 
   useEffect(() => {
-    if (selectedUsers.length === 0 || !message) setIsValid(false);
+    if (selectedUsers.length === 0) setIsValid(false);
     else setIsValid(true);
-  }, [message, selectedUsers]);
+  }, [selectedUsers]);
 
   async function getUsers() {
     try {
@@ -61,15 +60,10 @@ function NewChatModal(props) {
     } catch (err) {}
   }
 
-  async function createChat() {
+  async function addNewUser() {
     const chat = {
-      users: [
-        {
-          username: auth.username,
-          picture: auth.picture
-        }
-      ],
-      message: { message: message, user: auth.username, date: new Date() }
+      chatId: props.currentChat._id,
+      users: []
     };
     selectedUsers.forEach(user =>
       chat.users.push({ username: user.username, picture: user.picture })
@@ -77,8 +71,8 @@ function NewChatModal(props) {
 
     try {
       const responseData = await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + "/chats",
-        "POST",
+        process.env.REACT_APP_BACKEND_URL + "/chats/users",
+        "PATCH",
         JSON.stringify(chat),
         {
           "Content-Type": "application/json",
@@ -86,14 +80,13 @@ function NewChatModal(props) {
         }
       );
       setSelectedUsers([]);
-      setMessage("");
-      props.handleCreateChat(responseData.chat);
+      // props.handleCreateChat(responseData.chat);
       props.onHide();
     } catch (err) {}
   }
 
   function handleSend() {
-    createChat();
+    addNewUser();
   }
 
   function handleRemoveUser(username) {
@@ -112,7 +105,7 @@ function NewChatModal(props) {
         <Modal.Title
         // id="contained-modal-title-vcenter"
         >
-          Add a user
+          Start a new chat
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -182,18 +175,12 @@ function NewChatModal(props) {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <textarea
-          className="form-control"
-          value={message}
-          onChange={event => setMessage(event.target.value)}
-          rows="3"
-        ></textarea>
         <Button onClick={handleSend} disabled={!isValid}>
-          Add
+          Send
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-export default NewChatModal;
+export default AddUserModal;

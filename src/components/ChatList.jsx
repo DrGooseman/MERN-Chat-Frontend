@@ -24,15 +24,21 @@ function ChatList(props) {
   function receiveIncomingUpdate(err, updatedChat) {
     setLastUpdatedChat(updatedChat);
     setChats(prevChats => {
-      return [
+      const newChats = [
         ...prevChats.filter(chat => chat._id !== updatedChat._id),
         updatedChat
       ];
+      sortChats(newChats);
+      return newChats;
     });
   }
 
   useEffect(() => {
-    if (lastUpdatedChat && lastUpdatedChat._id === props.currentChat._id)
+    if (
+      lastUpdatedChat &&
+      props.currentChat &&
+      lastUpdatedChat._id === props.currentChat._id
+    )
       props.setCurrentChat(lastUpdatedChat);
   }, [chats]);
 
@@ -48,7 +54,11 @@ function ChatList(props) {
         }
       );
 
-      setChats(responseData.chats);
+      let chats = responseData.chats;
+
+      sortChats(chats);
+
+      setChats(chats);
 
       // getQuestion();
     } catch (err) {}
@@ -56,6 +66,18 @@ function ChatList(props) {
 
   function selectChat(chatId) {
     props.setCurrentChat(chats.find(chat => chat._id === chatId));
+  }
+
+  function sortChats(chats) {
+    chats.sort((a, b) =>
+      new Date(a.messages[a.messages.length - 1].date) >
+      new Date(b.messages[b.messages.length - 1].date)
+        ? -1
+        : new Date(b.messages[b.messages.length - 1].date) >
+          new Date(a.messages[a.messages.length - 1].date)
+        ? 1
+        : 0
+    );
   }
 
   return (
@@ -86,7 +108,6 @@ function ChatList(props) {
           handleClick={() => selectChat(chat._id)}
         />
       ))}
-      <button onClick={() => console.log(props.currentChat)}>click</button>
     </div>
   );
 }

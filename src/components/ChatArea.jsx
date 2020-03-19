@@ -16,13 +16,13 @@ function ChatArea(props) {
 
   async function sendMessage() {
     const chat = {
-      users: props.currentChat.users,
+      chatId: props.currentChat._id,
       message: { message: text, user: auth.username, date: new Date() }
     };
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_BACKEND_URL + "/chats",
-        "POST",
+        "PATCH",
         JSON.stringify(chat),
         {
           "Content-Type": "application/json",
