@@ -75,7 +75,8 @@ function Login() {
           responseData.token,
           responseData.username,
           null,
-          responseData.picture
+          responseData.picture,
+          responseData.email
         );
       } catch (err) {}
     } else {
@@ -96,7 +97,8 @@ function Login() {
           responseData.token,
           responseData.username,
           null,
-          responseData.picture
+          responseData.picture,
+          responseData.email
         );
       } catch (err) {}
     }

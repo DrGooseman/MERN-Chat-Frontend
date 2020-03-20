@@ -7,14 +7,16 @@ export function useAuth() {
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [_id, setUserId] = useState();
   const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
   const [picture, setPicture] = useState();
 
   const login = useCallback(
-    (uid, token, username, oldExpirationDate, picture) => {
+    (uid, token, username, oldExpirationDate, picture, email) => {
       setToken(token);
       setUsername(username);
       setPicture(picture);
       setUserId(uid);
+      setEmail(email);
       const tokenExpirationDate =
         oldExpirationDate ||
         new Date(new Date().getTime() + 1000 * 60 * 60 * 12);
@@ -27,6 +29,7 @@ export function useAuth() {
           username: username,
           token: token,
           picture: picture,
+          email: email,
           expiration: tokenExpirationDate.toISOString()
         })
       );
@@ -62,9 +65,10 @@ export function useAuth() {
         storedData.token,
         storedData.username,
         new Date(storedData.expiration),
-        storedData.picture
+        storedData.picture,
+        storedData.email
       );
   }, [login]);
 
-  return { token, login, logout, _id, username, picture };
+  return { token, login, logout, _id, username, picture, email };
 }

@@ -1,11 +1,15 @@
 import openSocket from "socket.io-client";
+let socket;
 
 function connectToSocket(username, cb) {
-  const socket = openSocket("http://localhost:5000", {
+  socket = openSocket("http://localhost:5000", {
     query: `username=${username}`
   });
   socket.on("updateChat", chat => cb(null, chat));
-  // socket.emit("connect", username);
 }
 
-export { connectToSocket };
+function disconnect() {
+  socket.disconnect();
+}
+
+export { connectToSocket, disconnect };

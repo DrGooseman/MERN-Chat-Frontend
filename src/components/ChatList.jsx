@@ -3,7 +3,7 @@ import Conversation from "./Conversation";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
-import { connectToSocket, emit } from "../api";
+import { connectToSocket } from "../api";
 
 import { useHttpClient } from "../hooks/http-hook";
 import { AuthContext } from "../auth-context";
@@ -18,8 +18,8 @@ function ChatList(props) {
   useEffect(() => {
     getChats();
     // connectToSocket(auth.username);
-    connectToSocket(auth.username, receiveIncomingUpdate);
-  }, []);
+    if (auth.username) connectToSocket(auth.username, receiveIncomingUpdate);
+  }, [auth.username]);
 
   function receiveIncomingUpdate(err, updatedChat) {
     setLastUpdatedChat(updatedChat);

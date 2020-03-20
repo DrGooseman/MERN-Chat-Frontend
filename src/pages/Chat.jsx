@@ -96,7 +96,8 @@ function Chat() {
             .map((message, index) => (
               <Message
                 key={index}
-                messageType={
+                messageType={message.messageType}
+                messageUserType={
                   message.user === auth.username
                     ? "you-message"
                     : "other-message"

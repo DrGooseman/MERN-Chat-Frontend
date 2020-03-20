@@ -18,13 +18,14 @@ html {
 body {
   /* display: grid;
   place-items: center; */
-  display: flex; /* NEW, Spec - Firefox, Chrome, Opera */
+  /* display: flex;
 
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
 #chat-container {
+  margin: auto;
   display: grid;
   grid:
     "search-container chat-title" 71px
@@ -33,9 +34,9 @@ body {
     / 275px 1fr;
   /* min-width: 800px; */
   width: 100vw;
-  max-width: 800px;
+  max-width: 1000px;
   max-height: 100%;
-  height: 95vh;
+  height: 100vh;
   background: #fff;
   border-radius: 10px;
 }
@@ -248,10 +249,13 @@ body {
   grid-column-gap: 15px;
 }
 
-.message-row img {
+.message-row-prof {
   border-radius: 100%;
   grid-row: span 2;
   height: 46px;
+}
+.message-row img {
+  max-height: 240px;
 }
 
 .message-text {
@@ -294,10 +298,17 @@ body {
 }
 
 .center-container {
-  width: 90%;
-  height: 90%;
-  max-width: 44rem;
-  max-height: 44rem;
+  margin: auto;
+  width: 100%;
+  /* height: 90%; */
+  max-width: 34rem;
+  /* max-height: 44rem; */
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   background-color: white;
 }
 
@@ -324,15 +335,16 @@ body {
   height: 1.8rem;
   width: 1.8rem;
   text-align: center;
+  margin-left: 2px;
 
   padding: 0;
 }
 
 .new-chat-modal-added-user {
   margin-right: 0.2rem;
-  border: 1px solid #ddd;
+  border: 0.6px solid #ddd;
   border-color: rgb(0, 123, 255) !important;
-  background-color: rgb(111, 181, 255) !important;
+  background-color: rgb(184, 219, 255) !important;
   /* min-width: 4rem; */
   height: 2.6rem;
   padding-left: 4px;

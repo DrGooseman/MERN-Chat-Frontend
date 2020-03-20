@@ -57,7 +57,6 @@ function NewChatModal(props) {
       );
 
       setUsers(responseData.users);
-      console.log(responseData.users);
     } catch (err) {}
   }
 
@@ -69,7 +68,12 @@ function NewChatModal(props) {
           picture: auth.picture
         }
       ],
-      message: { message: message, user: auth.username, date: new Date() }
+      message: {
+        message: message,
+        user: auth.username,
+        date: new Date(),
+        messageType: "text"
+      }
     };
     selectedUsers.forEach(user =>
       chat.users.push({ username: user.username, picture: user.picture })

@@ -8,10 +8,16 @@ import { getChatName } from "./../util/utils";
 
 import { AuthContext } from "../auth-context";
 import AddUserModal from "./AddUserModal";
+import { disconnect } from "../api";
 
 function ChatTitle(props) {
   const auth = useContext(AuthContext);
   const [showingAddUserModal, setShowingAddUserModal] = useState(false);
+
+  function handleLogout() {
+    disconnect();
+    auth.logout();
+  }
 
   return (
     <React.Fragment>
@@ -46,7 +52,8 @@ function ChatTitle(props) {
               ></img>
               <h2>{auth.username}</h2>
               <h3>{auth.email}</h3>
-              <Button onClick={auth.logout}>Logout</Button>
+              <br></br>
+              <Button onClick={handleLogout}>Logout</Button>
             </div>
           }
         >

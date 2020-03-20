@@ -13,7 +13,7 @@ import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 
 function App() {
-  const { token, login, logout, _id, username, picture } = useAuth();
+  const { token, login, logout, _id, username, picture, email } = useAuth();
 
   let routes;
 
@@ -46,7 +46,8 @@ function App() {
         login,
         logout,
         username,
-        picture
+        picture,
+        email
       }}
     >
       <Router>
