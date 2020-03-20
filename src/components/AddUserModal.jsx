@@ -105,7 +105,7 @@ function AddUserModal(props) {
         <Modal.Title
         // id="contained-modal-title-vcenter"
         >
-          Start a new chat
+          Add a user
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -176,7 +176,7 @@ function AddUserModal(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={handleSend} disabled={!isValid}>
-          Send
+          Add
         </Button>
       </Modal.Footer>
     </Modal>

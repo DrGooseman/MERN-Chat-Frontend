@@ -112,7 +112,7 @@ function NewChatModal(props) {
         <Modal.Title
         // id="contained-modal-title-vcenter"
         >
-          Add a user
+          Start a new chat
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -189,7 +189,7 @@ function NewChatModal(props) {
           rows="3"
         ></textarea>
         <Button onClick={handleSend} disabled={!isValid}>
-          Add
+          Send
         </Button>
       </Modal.Footer>
     </Modal>
