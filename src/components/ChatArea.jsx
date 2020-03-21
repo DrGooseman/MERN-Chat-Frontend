@@ -101,6 +101,13 @@ function ChatArea(props) {
         placeholder="type a message"
         onChange={changeText}
         value={text}
+        onKeyDown={event => {
+          if (!text) return;
+          if (event.key !== "Enter") return;
+          sendMessage();
+          //props.handleSend(text);
+          setText("");
+        }}
       />
       <button
         onClick={() => {

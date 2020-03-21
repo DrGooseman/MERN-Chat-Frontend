@@ -214,12 +214,18 @@ body {
   width: 75%;
 }
 
+.bug-parent {
+  max-height: 100%;
+  margin-top: auto;
+  /* display: flex;
+  flex-direction: column-reverse; */
+  overflow-y: auto;
+}
 #chat-message-list {
   grid-area: chat-message-list;
   display: flex;
   flex-direction: column-reverse;
   padding: 0 20px;
-  overflow-y: scroll;
 }
 
 .message-row {

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 
 import ChatArea from "../components/ChatArea";
 import Message from "../components/Message";
@@ -13,9 +13,19 @@ import { getChatName, getPictureOfUser, getDate } from "./../util/utils";
 function Chat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [showingNewChatModal, setShowingNewChatModal] = useState(false);
-  //const [currentUser, setCurrentUser] = useState("Jim");
+  const [previousChatId, setPreviousChatId] = useState();
+
+  const messagesEndRef = useRef(null);
 
   const auth = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!currentChat) return;
+    if (!previousChatId || previousChatId !== currentChat._id) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    }
+    setPreviousChatId(currentChat._id);
+  }, [currentChat]);
 
   function handleDeleteChat() {
     // setConversations(
@@ -87,29 +97,31 @@ function Chat() {
         currentChat={currentChat}
         handleDeleteChat={handleDeleteChat}
       />
-
-      <div id="chat-message-list">
-        {currentChat &&
-          currentChat.messages
-            .slice(0)
-            .reverse()
-            .map((message, index) => (
-              <Message
-                key={index}
-                messageType={message.messageType}
-                messageUserType={
-                  message.user === auth.username
-                    ? "you-message"
-                    : "other-message"
-                }
-                message={message.message}
-                messageDate={getDate(message.date)}
-                pic={
-                  process.env.REACT_APP_ASSET_URL +
-                  getPictureOfUser(currentChat, message.user)
-                }
-              />
-            ))}
+      <div className="bug-parent">
+        <div id="chat-message-list">
+          <div ref={messagesEndRef}></div>
+          {currentChat &&
+            currentChat.messages
+              .slice(0)
+              .reverse()
+              .map((message, index) => (
+                <Message
+                  key={index}
+                  messageType={message.messageType}
+                  messageUserType={
+                    message.user === auth.username
+                      ? "you-message"
+                      : "other-message"
+                  }
+                  message={message.message}
+                  messageDate={getDate(message.date)}
+                  pic={
+                    process.env.REACT_APP_ASSET_URL +
+                    getPictureOfUser(currentChat, message.user)
+                  }
+                />
+              ))}
+        </div>
       </div>
 
       {currentChat && (

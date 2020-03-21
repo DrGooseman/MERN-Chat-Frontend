@@ -25,7 +25,11 @@ export function getPictureOfUser(chat, username) {
 
 export function getDate(dateString) {
   const date = new Date(dateString);
-  let string = date.getHours() + ":" + date.getMinutes() + " ";
+  // let string = date.getHours() + ":" + date.getMinutes() + " ";
+  let string =
+    date.toLocaleTimeString("en-GB", {
+      timeStyle: "short"
+    }) + " ";
   if (date.getDate() === new Date().getDate()) string += "today";
   else if (
     date.getDate() === new Date(new Date() - 60 * 60 * 24 * 1000).getDate()
